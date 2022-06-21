@@ -72,9 +72,6 @@ func EncodedLen(plain []byte) int {
 // The actual number of bytes decoded by DecodeTo can be less than the value returned by DecodedCap.
 func DecodedCap(encoded []byte) (int, error) {
 	n := len(encoded)
-	if n == 0 {
-		return 0, nil
-	}
 	if n%5 != 0 {
 		return 0, InvalidEncodedLengthError(n)
 	}
@@ -142,12 +139,8 @@ func EncodeTo(plain, encoded []byte) (int, error) {
 func DecodeTo(encoded, plain []byte) (int, error) {
 	decodedCap, errCap := DecodedCap(encoded)
 
-	if errCap != nil {
+	if errCap != nil || decodedCap == 0 {
 		return 0, errCap
-	}
-
-	if len(encoded) == 0 {
-		return 0, nil
 	}
 
 	if len(plain) < decodedCap {
