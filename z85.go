@@ -169,25 +169,18 @@ func DecodeTo(encoded, plain []byte) (int, error) {
 		m3 := uint32(decoding[r3])
 		m4 := uint32(decoding[r4])
 
-		if m0 == math.MaxUint8 || m1 == math.MaxUint8 ||
-			m2 == math.MaxUint8 || m3 == math.MaxUint8 || m4 == math.MaxUint8 {
+		if m0|m1|m2|m3|m4 == math.MaxUint8 {
 			if m0 == math.MaxUint8 {
 				return 0, InvalidEncodedByteError(r0)
-			}
-
-			if m1 == math.MaxUint8 {
+			} else if m1 == math.MaxUint8 {
 				return 0, InvalidEncodedByteError(r1)
-			}
-
-			if m2 == math.MaxUint8 {
+			} else if m2 == math.MaxUint8 {
 				return 0, InvalidEncodedByteError(r2)
-			}
-
-			if m3 == math.MaxUint8 {
+			} else if m3 == math.MaxUint8 {
 				return 0, InvalidEncodedByteError(r3)
+			} else {
+				return 0, InvalidEncodedByteError(r4)
 			}
-
-			return 0, InvalidEncodedByteError(r4)
 		}
 
 		binary.BigEndian.PutUint32(decoded, m0*52200625+m1*614125+m2*7225+m3*85+m4)
